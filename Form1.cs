@@ -24,11 +24,11 @@ namespace grid
         }
     }
 
+    [TypeConverter(typeof(optionConvertor))]
     enum MyEnum
     {
         OPTION1,
         OPTION2,
-        OPTION3,
     }
 
     class MyClass
@@ -107,7 +107,15 @@ namespace grid
         /// <returns></returns>
         public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
         {
-            return value.ToString();
+            switch (value.ToString())
+            {
+                case "選項1":
+                    return MyEnum.OPTION1;
+                case "選項2":
+                    return MyEnum.OPTION2;
+                default:
+                    return null;
+            }
         }
         /// <summary>
         /// Convert From Enum Type To String Type
@@ -119,8 +127,19 @@ namespace grid
         /// <returns></returns>
         public override object ConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
         {
-            return value;
+            switch ((MyEnum)value)
+            {
+                case MyEnum.OPTION1:
+                    return "選項1";
+                case MyEnum.OPTION2:
+                    return "選項2";
+                default:
+                    return null;
+            }
         }
 
+       public optionConvertor(Type type):base(type)
+       {
+       }
     }
 }
