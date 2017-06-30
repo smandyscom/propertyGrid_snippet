@@ -21,10 +21,11 @@ namespace grid
         private void Form1_Load(object sender, EventArgs e)
         {
             propertyGrid1.SelectedObject = new MyClass();
+            dataGridView1.DataSource = new List<MyClass>(new MyClass[] {new MyClass()} );
         }
     }
 
-    [TypeConverter(typeof(optionConvertor))]
+    [TypeConverter(typeof(optionEnumConvertor))]
     enum MyEnum
     {
         OPTION1,
@@ -66,15 +67,17 @@ namespace grid
         }
 
         [DisplayName("想要選什麼？")] // much more human-readable?
-        [TypeConverter(typeof(optionConvertor))]
+        [TypeConverter(typeof(optionEnumConvertor))]
         public MyEnum Property3 { get; set; }
 
-        protected string __innerVariableString = "";
+        protected string __innerVariableString = "default";
         protected int __innerVariableInteger = 15;
 
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     class stringUIEditor :
         UITypeEditor
     {
@@ -87,15 +90,19 @@ namespace grid
         {
             Form __form = new Form();       // allocating a form , used to show-up editable facility 
             TextBox __tb = new TextBox();
+            __tb.Text = "Please Input What You Want";
+            __tb.Dock = DockStyle.Fill;
+
             __form.Controls.Add(__tb);
             __form.AutoSize=true;
+            __form.Text = "Raised by EditValue()";
             __form.ShowDialog(); // show-up the form 
             return __tb.Text; //return the text value the user just input.
         }
     }
 
 
-    class optionConvertor :
+    class optionEnumConvertor :
         EnumConverter
     {
         /// <summary>
@@ -138,7 +145,7 @@ namespace grid
             }
         }
 
-       public optionConvertor(Type type):base(type)
+       public optionEnumConvertor(Type type):base(type)
        {
        }
     }
